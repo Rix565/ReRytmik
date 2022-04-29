@@ -35,7 +35,7 @@ if($_POST['cmd']=="UPLOAD"){
 }
 if($_POST['cmd']=="DELETE"){
     $user = getUser($db);
-    echo deleteSongPacket($db, $r);
+    echo deleteSongPacket($db, $user);
 }
 header("Content-Length: ".ob_get_length());
 ob_end_flush();
