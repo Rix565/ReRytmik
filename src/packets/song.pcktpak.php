@@ -23,17 +23,259 @@ function displayListPacket($db, $r){
     if($currentPage==1){
         $startItem = 1;
     }
-    $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id ORDER BY `id` DESC LIMIT 13");
-    $q2->execute([
-        "id" => $startItem,
-    ]);
+    //why god
+    if($_POST['filtr']=="A"){
+        $q3 = $db->prepare("SELECT * FROM `users` WHERE `name`=:name");
+        $q3->execute([
+            "name" => $_POST['fauth']
+        ]);
+        $r3 = $q3->fetch();
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "author_id" => $r3['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `author_id`=:author_id");
+        $q3->execute([
+            "author_id"=>$r3['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="N"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "name" => $_POST['fname']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `name`=:name");
+        $q3->execute([
+            "name"=>$_POST['fname']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="1"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1");
+        $q3->execute([
+            "tag1"=>$_POST['ftag1']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="2"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag2`=:tag2 ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag2`=:tag2");
+        $q3->execute([
+            "tag2"=>$_POST['ftag2']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="12"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND`tag2`=:tag2 ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "tag1" => $_POST['ftag1']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `tag2`=:tag2");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "tag2"=>$_POST['ftag2']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="NA"){
+        $q3 = $db->prepare("SELECT * FROM `users` WHERE `name`=:name");
+        $q3->execute([
+            "name" => $_POST['fauth']
+        ]);
+        $r3 = $q3->fetch();
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `author_id`=:author_id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "name"=>$_POST['fname'],
+            "author_id" => $r3['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `author_id`=:author_id AND `name`=:name");
+        $q3->execute([
+            "name"=>$_POST['fname'],
+            "author_id"=>$r3['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="NA12"){
+        $q3 = $db->prepare("SELECT * FROM `users` WHERE `name`=:name");
+        $q3->execute([
+            "name" => $_POST['fauth']
+        ]);
+        $r3 = $q3->fetch();
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND`tag2`=:tag2 AND `author_id`=:author_id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "tag1" => $_POST['ftag1'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r3['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `tag2`=:tag2 AND `author_id`=:author_id AND `name`=:name");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "tag2"=>$_POST['ftag2'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r3['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="NA1"){
+        $q3 = $db->prepare("SELECT * FROM `users` WHERE `name`=:name");
+        $q3->execute([
+            "name" => $_POST['fauth']
+        ]);
+        $r3 = $q3->fetch();
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `author_id`=:author_id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r3['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `author_id`=:author_id AND `name`=:name");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r3['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="NA2"){
+        $q3 = $db->prepare("SELECT * FROM `users` WHERE `name`=:name");
+        $q3->execute([
+            "name" => $_POST['fauth']
+        ]);
+        $r3 = $q3->fetch();
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND`tag2`=:tag2 AND `author_id`=:author_id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r3['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag2`=:tag2 AND `author_id`=:author_id AND `name`=:name");
+        $q3->execute([
+            "tag2"=>$_POST['ftag2'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r3['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="A1"){
+        $q3 = $db->prepare("SELECT * FROM `users` WHERE `name`=:name");
+        $q3->execute([
+            "name" => $_POST['fauth']
+        ]);
+        $r3 = $q3->fetch();
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND`author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "author_id"=>$r3['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `author_id`=:author_id");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "author_id"=>$r3['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="A2"){
+        $q3 = $db->prepare("SELECT * FROM `users` WHERE `name`=:name");
+        $q3->execute([
+            "name" => $_POST['fauth']
+        ]);
+        $r3 = $q3->fetch();
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag2`=:tag2 AND`author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "author_id"=>$r3['id'],
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag2`=:tag2 AND `author_id`=:author_id");
+        $q3->execute([
+            "tag2" => $_POST['ftag2'],
+            "author_id"=>$r3['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="A12"){
+        $q3 = $db->prepare("SELECT * FROM `users` WHERE `name`=:name");
+        $q3->execute([
+            "name" => $_POST['fauth']
+        ]);
+        $r3 = $q3->fetch();
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `tag2`=:tag2  AND `author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "tag2" => $_POST['ftag2'],
+            "author_id"=>$r3['id'],
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `tag2`=:tag2 AND `author_id`=:author_id");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "author_id"=>$r3['id'],
+            "tag2" => $_POST['ftag2']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="N12"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `tag2`=:tag2  AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "tag2" => $_POST['ftag2'],
+            "name" => $_POST['fname']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `tag2`=:tag2 AND `name`=:name");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "name" => $_POST['fname'],
+            "tag2" => $_POST['ftag2']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="N1"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "name" => $_POST['fname']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `name`=:name");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "name" => $_POST['fname']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="N2"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag2`=:tag2 AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "name" => $_POST['fname']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag2`=:tag2 AND `name`=:name");
+        $q3->execute([
+            "tag2" => $_POST['ftag2'],
+            "name"=>$_POST['fname'],
+        ]);
+        $r3 = $q3->fetch();
+    }else{
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs`");
+        $q3->execute();
+        $r3 = $q3->fetch();
+    }
     $r2 = $q2->fetchAll();
     $lastItem = end($r2);
     $lastPage = $lastItem['id'] / 13;
     $lastPage = strtok($lastPage,'.');
-    $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs`");
-    $q3->execute();
-    $r3 = $q3->fetch();
     $songdat = "";
     foreach($r2 as $song){
         $qt = $db->prepare("SELECT UNIX_TIMESTAMP(:date)");
@@ -60,18 +302,234 @@ function displayPersonalListPacket($db, $r){
     if($currentPage==1){
         $startItem = 1;
     }
-    $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
-    $q2->execute([
-        "id" => $startItem,
-        "author_id" => $r['id']
-    ]);
+    //why god
+    if($_POST['filtr']=="A"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "author_id" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `author_id`=:author_id");
+        $q3->execute([
+            "author_id"=>$r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="N"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `name`=:name AND `author_id`=:aid ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "name" => $_POST['fname'],
+            "aid" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `name`=:name AND `author_id`=:aid");
+        $q3->execute([
+            "name"=>$_POST['fname'],
+            "aid" => $r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="1"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `author_id`=:aid ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "aid" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `author_id`=:aid");
+        $q3->execute([
+            "tag1"=>$_POST['ftag1'],
+            "aid" => $r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="2"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag2`=:tag2 AND `author_id`=:aid ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "aid" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag2`=:tag2 AND `author_id`=:aid");
+        $q3->execute([
+            "tag2"=>$_POST['ftag2'],
+            "aid" => $r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="12"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND`tag2`=:tag2 AND `author_id`=:aid ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "tag1" => $_POST['ftag1'],
+            "aid" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `tag2`=:tag2 AND `author_id`=:aid");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "tag2"=>$_POST['ftag2'],
+            "aid" => $r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="NA"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `author_id`=:author_id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "name"=>$_POST['fname'],
+            "author_id" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `author_id`=:author_id AND `name`=:name");
+        $q3->execute([
+            "name"=>$_POST['fname'],
+            "author_id"=>$r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="NA12"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND`tag2`=:tag2 AND `author_id`=:author_id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "tag1" => $_POST['ftag1'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `tag2`=:tag2 AND `author_id`=:author_id AND `name`=:name");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "tag2"=>$_POST['ftag2'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="NA1"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `author_id`=:author_id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `author_id`=:author_id AND `name`=:name");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="NA2"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND`tag2`=:tag2 AND `author_id`=:author_id AND `name`=:name ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag2`=:tag2 AND `author_id`=:author_id AND `name`=:name");
+        $q3->execute([
+            "tag2"=>$_POST['ftag2'],
+            "name"=>$_POST['fname'],
+            "author_id"=>$r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="A1"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND`author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "author_id"=>$r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `author_id`=:author_id");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "author_id"=>$r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="A2"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag2`=:tag2 AND`author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "author_id"=>$r['id'],
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag2`=:tag2 AND `author_id`=:author_id");
+        $q3->execute([
+            "tag2" => $_POST['ftag2'],
+            "author_id"=>$r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="A12"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `tag2`=:tag2  AND `author_id`=:author_id ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "tag2" => $_POST['ftag2'],
+            "author_id"=>$r['id'],
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `tag2`=:tag2 AND `author_id`=:author_id");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "author_id"=>$r['id'],
+            "tag2" => $_POST['ftag2']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="N12"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `tag2`=:tag2  AND `name`=:name AND `author_id`=:aid ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "tag2" => $_POST['ftag2'],
+            "name" => $_POST['fname'],
+            "aid" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `tag2`=:tag2 AND `name`=:name AND `author_id`=:aid");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "name" => $_POST['fname'],
+            "tag2" => $_POST['ftag2'],
+            "aid" => $r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="N1"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag1`=:tag1 AND `name`=:name AND `author_id`=:aid ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag1" => $_POST['ftag1'],
+            "name" => $_POST['fname'],
+            "aid" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag1`=:tag1 AND `author_id`=:aid AND `name`=:name");
+        $q3->execute([
+            "tag1" => $_POST['ftag1'],
+            "name" => $_POST['fname'],
+            "aid" => $r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }elseif($_POST['filtr']==="N2"){
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `tag2`=:tag2 AND `name`=:name AND `author_id`=:aid ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "tag2" => $_POST['ftag2'],
+            "name" => $_POST['fname'],
+            "aid" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs` WHERE `tag2`=:tag2 AND `name`=:name AND `author_id`=:aid");
+        $q3->execute([
+            "tag2" => $_POST['ftag2'],
+            "name"=>$_POST['fname'],
+            "aid" => $r['id']
+        ]);
+        $r3 = $q3->fetch();
+    }else{
+        $q2 = $db->prepare("SELECT * FROM `songs` WHERE `id` >= :id AND `author_id`=:aid ORDER BY `id` DESC LIMIT 13");
+        $q2->execute([
+            "id" => $startItem,
+            "aid" => $r['id']
+        ]);
+        $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs`");
+        $q3->execute();
+        $r3 = $q3->fetch();
+    }
     $r2 = $q2->fetchAll();
     $lastItem = end($r2);
     $lastPage = $lastItem['id'] / 13;
     $lastPage = strtok($lastPage,'.');
-    $q3 = $db->prepare("SELECT COUNT(*) AS nbr FROM `songs`");
-    $q3->execute();
-    $r3 = $q3->fetch();
     $songdat = "";
     foreach($r2 as $song){
         $qt = $db->prepare("SELECT UNIX_TIMESTAMP(:date)");
